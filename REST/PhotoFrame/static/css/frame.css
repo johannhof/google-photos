@@ -87,6 +87,10 @@ pre {
   opacity: 1 !important;
 }
 
+.fancybox-slide {
+  padding: 0 !important;
+}
+
 .loading-dialog {
   position: fixed;
   margin: 0;

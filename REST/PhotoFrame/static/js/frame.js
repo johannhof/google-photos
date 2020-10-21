@@ -130,18 +130,34 @@ $(document).ready(() => {
   // Set up the fancybox image gallery.
   $().fancybox({
     selector: '[data-fancybox="gallery"]',
+    gutter: 1,
     loop: true,
+    arrows: false,
+    toolbar: false,
+    infobar: false,
+    //modal: true,
     buttons: ['slideShow', 'fullScreen', 'close'],
     image: {preload: true},
     transitionEffect: 'fade',
     transitionDuration: 1000,
-    fullScreen: {autoStart: false},
-    // Automatically advance after 3s to next photo.
-    slideShow: {autoStart: true, speed: 3000},
+    fullScreen: {autoStart: true},
+    hideScrollbar: true,
+    // Automatically advance after 30s to next photo.
+    slideShow: {autoStart: true, speed: 30000},
     // Display the contents figcaption element as the caption of an image
-    caption: function(instance, item) {
-      return $(this).find('figcaption').html();
-    }
+    //caption: function(instance, item) {
+      //return $(this).find('figcaption').html();
+    //}
+    onInit: function(instance) {
+      shuffle(instance.group);
+    },
+    afterLoad : function(instance, current) {
+        let ratio = window.innerWidth / current.width;
+        current.width  = window.innerWidth;
+        current.height = current.height * ratio;
+        instance.scaleToActual(0, 0, 0);
+        instance.SlideShow.start();
+    },
   });
 
   // Clicking the 'view fullscreen' button opens the gallery from the first
@@ -154,3 +170,23 @@ $(document).ready(() => {
     window.location = '/logout';
   });
 });
+
+function shuffle(array) {
+    let counter = array.length;
+
+    // While there are elements in the array
+    while (counter > 0) {
+        // Pick a random index
+        let index = Math.floor(Math.random() * counter);
+
+        // Decrease counter by 1
+        counter--;
+
+        // And swap the last element with it
+        let temp = array[counter];
+        array[counter] = array[index];
+        array[index] = temp;
+    }
+
+    return array;
+}

@@ -165,6 +165,10 @@ $(document).ready(() => {
   $('#startSlideshow')
       .on('click', (e) => $('#images-container a').first().click());
 
+  setTimeout(function() {
+    $('#images-container a').first().click();
+  },  200);
+
   // Clicking log out opens the log out screen.
   $('#logout').on('click', (e) => {
     window.location = '/logout';

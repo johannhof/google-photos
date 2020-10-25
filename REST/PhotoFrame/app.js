@@ -174,7 +174,8 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   if (!req.user || !req.isAuthenticated()) {
     // Not logged in yet.
-    res.render('pages/login');
+    //res.render('pages/login');
+    res.redirect('/auth/google');
   } else {
     res.render('pages/frame');
   }

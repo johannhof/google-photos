@@ -131,8 +131,8 @@ if (process.env.DEBUG) {
 app.use(express.static('static'));
 app.use('/js', express.static(__dirname + '/node_modules/jquery/dist/'));
 app.use(
-    '/fancybox',
-    express.static(__dirname + '/node_modules/@fancyapps/fancybox/dist/'));
+    '/galleria',
+    express.static(__dirname + '/node_modules/galleria/dist/'));
 app.use(
     '/mdlite',
     express.static(__dirname + '/node_modules/material-design-lite/dist/'));

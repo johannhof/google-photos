@@ -17,6 +17,39 @@ function clearPreview() {
   showPreview(null, null);
 }
 
+function showGallery(source, mediaItems) {
+  var data = [];
+  $.each(mediaItems, (i, item) => {
+    // Compile the caption, conisting of the description, model and time.
+    const description = item.description ? item.description : '';
+    const model = item.mediaMetadata.photo.cameraModel ?
+        `#Shot on ${item.mediaMetadata.photo.cameraModel}` :
+        '';
+    const time = item.mediaMetadata.creationTime;
+    const captionText = `${description} ${model} (${time})`
+
+    data.push({
+      //image: `${item.baseUrl}=w500-h500`,
+      //thumb: 'thumb1.jpg',
+      image: `${item.baseUrl}=w${item.mediaMetadata.width}-h${
+      item.mediaMetadata.height}`,
+      //title: 'my first image',
+      description: captionText,
+    });
+  });
+
+  shuffle(data);
+
+  Galleria.run('.galleria', {
+    autoplay: 15000,
+    carousel: false,
+    dataSource: data,
+    fullscreenCrop: "landscape",
+    thumbnails: 'numbers',
+    pauseOnInteraction: false,
+  });
+}
+
 // Shows a grid of media items in the photo frame.
 // The source is an object that describes how the items were loaded.
 // The media items are rendered on screen in a grid, with a caption based
@@ -112,7 +145,7 @@ function loadQueue() {
     success: (data) => {
       // Queue has been loaded. Display the media items as a grid on screen.
       hideLoadingDialog();
-      showPreview(data.parameters, data.photos);
+      showGallery(data.parameters, data.photos);
       hideLoadingDialog();
       console.log('Loaded queue.');
     },
@@ -126,48 +159,6 @@ function loadQueue() {
 $(document).ready(() => {
   // Load the queue of photos selected by the user for the photo
   loadQueue();
-
-  // Set up the fancybox image gallery.
-  $().fancybox({
-    selector: '[data-fancybox="gallery"]',
-    gutter: 1,
-    loop: true,
-    arrows: false,
-    toolbar: false,
-    infobar: false,
-    //modal: true,
-    buttons: ['slideShow', 'fullScreen', 'close'],
-    image: {preload: true},
-    transitionEffect: 'fade',
-    transitionDuration: 1000,
-    fullScreen: {autoStart: true},
-    hideScrollbar: true,
-    // Automatically advance after 30s to next photo.
-    slideShow: {autoStart: true, speed: 30000},
-    // Display the contents figcaption element as the caption of an image
-    //caption: function(instance, item) {
-      //return $(this).find('figcaption').html();
-    //}
-    onInit: function(instance) {
-      shuffle(instance.group);
-    },
-    afterLoad : function(instance, current) {
-        let ratio = window.innerWidth / current.width;
-        current.width  = window.innerWidth;
-        current.height = current.height * ratio;
-        instance.scaleToActual(0, 0, 0);
-        instance.SlideShow.start();
-    },
-  });
-
-  // Clicking the 'view fullscreen' button opens the gallery from the first
-  // image.
-  $('#startSlideshow')
-      .on('click', (e) => $('#images-container a').first().click());
-
-  setTimeout(function() {
-    $('#images-container a').first().click();
-  },  200);
 
   // Clicking log out opens the log out screen.
   $('#logout').on('click', (e) => {
